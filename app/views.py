@@ -34,5 +34,48 @@ def studentview(request):
         error = serializer.errors()
         return HttpResponse(error, content_type='application/json')
 
+    if request.method == 'PUT':
+        req = request.body
+        stream = io.BytesIO(req)
+        data = JSONParser().parse(stream)
+        id = data.get('id')
+        query = Student.objects.get(id=id)
+        serializer = StudentSerializer(query, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg': 'Data Updated Successfully!!!'}
+            json_res = JSONRenderer().render(res)
+            return HttpResponse(json_res, content_type='application/json')
+        json_res = serializer.errors()
+        return HttpResponse(json_res, content_type='application/json')
+
+    if request.method == 'PATCH':
+        req = request.body
+        stream = io.BytesIO(req)
+        data = JSONParser().parse(stream)
+        id = data.get('id')
+        query = Student.objects.get(id=id)
+        serializer = StudentSerializer(query, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            res = {'msg': 'Data Partially Updated'}
+            json_res = JSONRenderer().render(res)
+            return HttpResponse(json_res, content_type='application/json')
+        json_res = serializer.errors()
+        return HttpResponse(json_res, content_type='application/json')
+
+    if request.method == 'DELETE':
+        req = request.body
+        stream = io.BytesIO(req)
+        data = JSONParser().parse(stream)
+        id = data.get('id')
+        query = Student.objects.get(id=id)
+        query.delete()
+        res = {'msg': 'Data Deleted Successfully!!!'}
+        json_data = JSONRenderer().render(res)
+        return HttpResponse(json_data, content_type='application/json')
+
+
+
 
 
