@@ -5,5 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('student/<int:pk>/', singlestudentview),
     path('students/', allstudentview),
-    path('createstudent/', studentview)
+    path('createstudent/', studentview, name='createstudent')
 ]
